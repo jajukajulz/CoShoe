@@ -1,5 +1,5 @@
 # CoShoe
-CoShoe is a smart contract that holds non-fungible tokens that represent a pair of shoes. Each pair of shoes are unique (personalised - buyer can choose name at the back and image on the side; public key of buyer is engraved into the sole.
+CoShoe is an Ethereum smart contract that holds non-fungible tokens that represent a pair of shoes. Each pair of shoes are unique (personalised - buyer can choose name at the back and image on the side; public key of buyer is engraved into the sole.
 
 ## Installation
 1. Install Truffle globally. Truffle is the most popular smart contract development, testing, and deployment framework. 
