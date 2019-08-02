@@ -9,18 +9,23 @@ $npm install -g truffle
 
 2. Start Ganache and Create a Workspace (or open an existing one). 
 
-3. Confirm CoShoe smart contract compiles successfully.
+3. Install npm dependencies.
+```
+$ npm install
+```
+
+4. Confirm CoShoe smart contract compiles successfully.
 ```
 $truffle compile
 ```
 
-4. Run tests for CoShoe smart contract.
+5. Run tests for CoShoe smart contract.
 ```
 $truffe test
 $truffle test --network development
 ```
 
-5. Deploy CoShoe smart contract to Ganache (assumes Ganache is running).
+6. Deploy CoShoe smart contract to Ganache (assumes Ganache is running).
 
 `truffle migrate` will run all migrations located within your project's migrations directory. If your migrations were previously run successfully, truffle migrate will start execution from the last migration that was run, running only newly created migrations. If no new migrations exists, `truffle migrate` won't perform any action at all. 
 ```
@@ -39,7 +44,7 @@ $truffle migrate --compile-all --reset
 
 If for some reason truffle fails to acknowledge a contract was modified and will not compile it again, delete the build/ directory. This will force a recompilation of all your contracts and running all your deploy scripts again.
 
-6. Update `truffle-config.js` development network with NetworkID, Host and Port values from your local Blockchain in Ganache.
+7. Update `truffle-config.js` development network with NetworkID, Host and Port values from your local Blockchain in Ganache.
 
 
 ## Other
