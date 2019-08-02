@@ -27,9 +27,10 @@ contract CoShoe is ERC721Token {
     *  @dev state variables
     */
     uint8 price = 0.5/(1 ether); //ether converted to wei
-    uint8 numTokensToMint = 100; //number of tokens to mint on deployment of contract
+    uint8 numTokensToMint = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
     uint256 shoesSold = 0; //number of shoes sold
     string _tokenURI = "CoShoe Token";
+
     /**
     *  @dev Array of shoes. Made public because of length method.
     */
@@ -79,9 +80,43 @@ contract CoShoe is ERC721Token {
     }
 
     /**
-    * @dev A function to get the number of shoes registered i.e. length of shoes array
+    * @dev A function to buy shoes and increment soldShoes
+    * Takes the input parameters name, image.
+    * Checks that there is still a pair of shoes left that has not been sold yet, otherwise it throws an error.
+    * Checks that the value that is attached to the function call equal the price , otherwise it throws an error.
+    * Transfers the ownership of a Shoe to the caller of the function by setting owner within the Shoe struct,
+      setting name and image to the input variables, and changing sold to true.
+    * @param name address of future owner of the token
+    * @param image address of future owner of the token
     */
-    function getNumberOfRegisteredShoes () external view returns(uint) {
-        return shoes.length;
+    function buyShoe(string _name, string _image) public {
+        if numTokensToMint - shoesSold < 1 throw;
+        if msg.value != price throw;
+        uint8 shoeIndex = shoesSold - 1;
+        shoes[shoeIndex].owner = msg.sender;
+        shoes[shoeIndex].name = _name;
+        shoes[shoeIndex].image = _image;
+        shoes[shoeIndex].sold = true;
+    }
+
+    /**
+    * @dev A function that returns an array of bools that are set to true if the equivalent index in shoes belongs to caller of this function
+    * Example: [true, false, false, false, false, true, false, false, …]
+    * Function implemented in a gas saving manor
+    */
+    function checkPurchases() external view returns(bool[]) {
+        bool[] shoeBoolArray;
+        bool shoeBoolArrayItem;
+        uint8 shoeArrayLength = shoes.length;
+        for (uint i = 0; i < shoeArrayLength; i++) {
+            if (shoes[shoeIndex].owner == msg.sender){
+                shoeBoolArrayItem = true;
+            }
+            else{
+                shoeBoolArrayItem = false;
+            }
+            shoeBoolArray.append(shoeBoolArrayItem);
+        }
+        return shoeBoolArray;
     }
 }
