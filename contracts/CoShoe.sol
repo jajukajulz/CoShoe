@@ -67,7 +67,7 @@ contract CoShoe is ERC721Token {
     * Add the pair to the array of shoes.
     * @param _to address of future owner of the token
     */
-    function createShoePair(address _to) public {
+    function createShoePair(address _to) private {
         //create new pair of shoes, push to array and return position
         uint256 _tokenId = (shoes.push(Shoe(_to, "", "", false)))-1;
 
@@ -89,14 +89,21 @@ contract CoShoe is ERC721Token {
     * @param name address of future owner of the token
     * @param image address of future owner of the token
     */
-    function buyShoe(string _name, string _image) public {
-        if numTokensToMint - shoesSold < 1 throw;
-        if msg.value != price throw;
+    function buyShoe(string _name, string _image) public payable{
+        require((numTokensToMint - shoesSold) < 1, 'No pair of shoes left');
+        require(msg.value != price, 'Proposed price does not match price of shoes');
+
         uint8 shoeIndex = shoesSold - 1;
-        shoes[shoeIndex].owner = msg.sender;
-        shoes[shoeIndex].name = _name;
-        shoes[shoeIndex].image = _image;
-        shoes[shoeIndex].sold = true;
+        uint buyerSendAmount = msg.value; //number of wei sent with the message
+        address buyerAddress = msg.sender; //sender of the message (current call)
+
+        Shoe memory shoeToBuy = shoes[shoeIndex];
+        address payable previousOwner = shoeToBuy.owner;
+        previousOwner.transfer(buyerSendAmount); //transfer money to previous owner
+        shoeToBuy.owner = buyerAddress;
+        shoeToBuy.name = _name;
+        shoeToBuy.image = _image;
+        shoeToBuy.sold = true;
     }
 
     /**
