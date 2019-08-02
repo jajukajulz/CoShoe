@@ -1,0 +1,34 @@
+{
+  "name": "coshoe",
+  "version": "1.0.0",
+  "description": "CoShoe is an Ethereum smart contract that holds non-fungible tokens that represent unique pairs of shoes. ",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jajukajulz/CoShoe.git"
+  },
+  "keywords": [
+    "solidity",
+    "smartcontract",
+    "erc721",
+    "token",
+    "nft",
+    "ethereum",
+    "truffle"
+  ],
+  "author": "Julian Kanjere",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jajukajulz/CoShoe/issues"
+  },
+  "homepage": "https://github.com/jajukajulz/CoShoe#readme",
+  "dependencies": {
+    "zeppelin-solidity": "^1.12.0"
+  }
+}
