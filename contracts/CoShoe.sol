@@ -113,7 +113,7 @@ contract CoShoe is ERC721Token {
     * Function implemented in a gas saving manor
     */
     function checkPurchases() public view returns(bool[]) {
-        uint shoeArrayLength = shoes.length;
+        uint shoeArrayLength = this.getNumberOfRegisteredShoes();
         bool[] memory shoeBoolArray = new bool[](shoeArrayLength);
         bool shoeBoolArrayItem;
         for (uint i = 0; i < shoeArrayLength; i++) {
@@ -126,5 +126,13 @@ contract CoShoe is ERC721Token {
             shoeBoolArray[i] = shoeBoolArrayItem;
         }
         return shoeBoolArray;
+    }
+
+
+    /**
+    * @dev A function to get the number of shoes registered / tokens minted i.e. length of shoes array
+    */
+    function getNumberOfRegisteredShoes () external view returns(uint) {
+        return shoes.length;
     }
 }
