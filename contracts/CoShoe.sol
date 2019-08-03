@@ -27,11 +27,17 @@ contract CoShoe is ERC721Token {
     /**
     *  @dev state variables
     */
-    uint8 NUM_TOKENS_TO_MINT = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
-    uint256 ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
-    uint256 PRICE = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
-    uint256 shoesSold = 0; //number of shoes sold
-    string _tokenURI = "CoShoe Token";
+    //uint8 NUM_TOKENS_TO_MINT = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
+
+    //100 tokens is causing out of gas exception, 25 tokens uses 7673544 gas (limit is approx 8000000),
+    // set gas limit in Ganache to 0x2FEFD800000 i.e. 3294197972992 and gas price to 200000000000000
+    // then cost of deploy for 100 tokens is 21526736
+    uint8 constant NUM_TOKENS_TO_MINT = 100;
+
+
+    uint8 shoesSold = 0; //number of shoes sold
+    uint8 constant ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
+    uint64 constant PRICE = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
 
     /**
     *  @dev Array of shoes. Made public because of length method.
@@ -54,29 +60,31 @@ contract CoShoe is ERC721Token {
         //set minter to Ethereum address that deployed the contract
         minter = msg.sender;
 
-        //create 100 tokens
-        for (uint i = 0; i < NUM_TOKENS_TO_MINT; i++) {
+        //mint 100 tokens
         createShoePair(minter);
-        }
     }
 
     /**
-    * @dev A function to create a new shoe pair (i.e. a token).
+    * @dev A function to create 100 shoe pairs (i.e. 100 tokens).
     * The owner of each token is the address deploying the contract (msg.sender),
     * name and image are empty strings( “” ), and sold is equal to false.
     * Add the pair to the array of shoes.
     * @param _to address of future owner of the token
     */
     function createShoePair(address _to) private {
-        //create new pair of shoes, push to array and return position
-        uint256 _tokenId = (shoes.push(Shoe(_to, "", "", false)))-1;
+        string memory _tokenURI = "CoShoe Token";
+        for (uint _tokenId = 0; _tokenId < NUM_TOKENS_TO_MINT; _tokenId++) {
 
-        // trigger registeredShoe event
-        emit registeredShoeEvent(_tokenId);
+            //create new pair of shoes, push to array and return position
+            shoes.push(Shoe(_to, "", "", false));
 
-        // Create unique token by calling Open-Zeppelin function
-        super._mint(_to, _tokenId);
-        super._setTokenURI(_tokenId, _tokenURI);
+            // trigger registeredShoe event
+            emit registeredShoeEvent(_tokenId);
+
+            // Create unique token by calling Open-Zeppelin function
+            super._mint(_to, _tokenId);
+            super._setTokenURI(_tokenId, _tokenURI);
+        }
     }
 
     /**
@@ -97,13 +105,13 @@ contract CoShoe is ERC721Token {
         uint buyerSendAmount = msg.value; //number of wei sent with the message
         address buyerAddress = msg.sender; //sender of the message (current call)
 
-        Shoe memory shoeToBuy = shoes[shoeIndex];
-        address previousOwner = shoeToBuy.owner;
+        //Shoe memory shoeToBuy = shoes[shoeIndex];
+        address previousOwner = shoes[shoeIndex].owner;
         previousOwner.transfer(buyerSendAmount); //transfer money to previous owner
-        shoeToBuy.owner = buyerAddress;
-        shoeToBuy.name = _name;
-        shoeToBuy.image = _image;
-        shoeToBuy.sold = true;
+        shoes[shoeIndex].owner = buyerAddress;
+        shoes[shoeIndex].name = _name;
+        shoes[shoeIndex].image = _image;
+        shoes[shoeIndex].sold = true;
         shoesSold += 1;
     }
 

@@ -7,7 +7,11 @@ CoShoe is an Ethereum smart contract that holds non-fungible tokens (ERC-721) th
 $npm install -g truffle 
 ```
 
-2. Start Ganache and Create a Workspace (or open an existing one). 
+2. Start Ganache and Create a Workspace (or open an existing one). Since we are minting 100 tokens in the constructor, you will need to create a Ganache Workspace with the following parameters to avoid an out of gas exception.
+```
+Gas Limit 3294197972992 
+Gas price 200000000000000
+```
 
 3. Install npm dependencies.
 ```
