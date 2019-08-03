@@ -19,8 +19,8 @@ contract CoShoe is ERC721Token {
     */
     struct Shoe {
         address owner; //this was previously address payable but The payable modifier for addresses is only available from solc v0.5.xx
-        string name;
-        string image; //url to the image
+        string name; //name at the back of the shoe chosen by buyer
+        string image; //url to the image that is on the side of the shoe, chosen by buyer
         bool sold;
     }
 
@@ -36,7 +36,7 @@ contract CoShoe is ERC721Token {
 
 
     uint8 shoesSold = 0; //number of shoes sold
-    uint8 constant ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
+    uint64 constant ETHER_WEI_CONST = 1000000000000000000; // 1 ether = 1000000000000000000 wei
     uint64 constant PRICE = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
 
     /**
@@ -94,12 +94,12 @@ contract CoShoe is ERC721Token {
     * Checks that the value that is attached to the function call equal the price , otherwise it throws an error.
     * Transfers the ownership of a Shoe to the caller of the function by setting owner within the Shoe struct,
       setting name and image to the input variables, and changing sold to true.
-    * @param _name address of future owner of the token
-    * @param _image address of future owner of the token
+    * @param _name name at the back of the shoe chosen by buyer
+    * @param _image url of image on side of shoe chosen by buyer
     */
     function buyShoe(string _name, string _image) public payable{
-        require((NUM_TOKENS_TO_MINT - shoesSold) <= 1, 'No pair of shoes left');
-        require(msg.value != PRICE, 'Proposed price does not match price of shoes');
+        require((NUM_TOKENS_TO_MINT - shoesSold) >= 1, 'No pair of shoes left');
+        require(msg.value == PRICE, 'Proposed price does not match price of shoes');
 
         uint shoeIndex = shoesSold; //shoesSold starts at 0
         uint buyerSendAmount = msg.value; //number of wei sent with the message

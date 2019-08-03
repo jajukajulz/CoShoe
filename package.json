@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/jajukajulz/CoShoe#readme",
   "dependencies": {
+    "truffle-assertions": "^0.9.1",
     "zeppelin-solidity": "^1.12.0"
   }
 }
