@@ -80,7 +80,7 @@ contract CoShoe is ERC721Token {
     }
 
     /**
-    * @dev A function to buy shoes and increment soldShoes
+    * @dev A function to buy shoes and increment shoesSold
     * Takes the input parameters name, image.
     * Checks that there is still a pair of shoes left that has not been sold yet, otherwise it throws an error.
     * Checks that the value that is attached to the function call equal the price , otherwise it throws an error.
@@ -90,10 +90,10 @@ contract CoShoe is ERC721Token {
     * @param _image address of future owner of the token
     */
     function buyShoe(string _name, string _image) public payable{
-        require((NUM_TOKENS_TO_MINT - shoesSold) < 1, 'No pair of shoes left');
+        require((NUM_TOKENS_TO_MINT - shoesSold) <= 1, 'No pair of shoes left');
         require(msg.value != price, 'Proposed price does not match price of shoes');
 
-        uint shoeIndex = shoesSold - 1;
+        uint shoeIndex = shoesSold; //shoesSold starts at 0
         uint buyerSendAmount = msg.value; //number of wei sent with the message
         address buyerAddress = msg.sender; //sender of the message (current call)
 
@@ -104,6 +104,7 @@ contract CoShoe is ERC721Token {
         shoeToBuy.name = _name;
         shoeToBuy.image = _image;
         shoeToBuy.sold = true;
+        shoesSold += 1;
     }
 
     /**
