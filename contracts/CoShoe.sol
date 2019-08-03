@@ -27,9 +27,9 @@ contract CoShoe is ERC721Token {
     /**
     *  @dev state variables
     */
-    uint256 ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
     uint8 NUM_TOKENS_TO_MINT = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
-    uint price = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
+    uint256 ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
+    uint256 PRICE = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
     uint256 shoesSold = 0; //number of shoes sold
     string _tokenURI = "CoShoe Token";
 
@@ -91,7 +91,7 @@ contract CoShoe is ERC721Token {
     */
     function buyShoe(string _name, string _image) public payable{
         require((NUM_TOKENS_TO_MINT - shoesSold) <= 1, 'No pair of shoes left');
-        require(msg.value != price, 'Proposed price does not match price of shoes');
+        require(msg.value != PRICE, 'Proposed price does not match price of shoes');
 
         uint shoeIndex = shoesSold; //shoesSold starts at 0
         uint buyerSendAmount = msg.value; //number of wei sent with the message
