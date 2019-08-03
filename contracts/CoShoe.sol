@@ -1,4 +1,5 @@
-pragma solidity ^0.5.0; //solidity version
+//pragma solidity ^0.5.0; //solidity version
+pragma solidity ^0.4.24;
 
 import "../node_modules/zeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 
@@ -17,7 +18,7 @@ contract CoShoe is ERC721Token {
     * an image (url where it can be downloaded), sold  (boolean)
     */
     struct Shoe {
-        address payable owner;
+        address owner; //this was previously address payable but The payable modifier for addresses is only available from solc v0.5.xx
         string name;
         string image; //url to the image
         bool sold;
@@ -26,8 +27,9 @@ contract CoShoe is ERC721Token {
     /**
     *  @dev state variables
     */
-    uint8 price = 0.5/(1 ether); //ether converted to wei
-    uint8 numTokensToMint = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
+    uint256 ETHER_WEI_CONST = 10^18; // 1 ether = 1000000000000000000 wei
+    uint8 NUM_TOKENS_TO_MINT = 100; //number of tokens (pairs of shoes) to mint on deployment of contract
+    uint price = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
     uint256 shoesSold = 0; //number of shoes sold
     string _tokenURI = "CoShoe Token";
 
@@ -46,16 +48,14 @@ contract CoShoe is ERC721Token {
 
     /**
     * @dev Contract constructor.
+    * ERC721Token(_name, _symbol) is required in OpenZeppelin implementation. _name and _symbol set in migration script
     */
-    constructor (string _name, string _symbol) public {
-        //required in OpenZeppelin implementation
-        ERC721Token(_name, _symbol);
-
+    constructor (string _name, string _symbol) ERC721Token(_name, _symbol) public {
         //set minter to Ethereum address that deployed the contract
         minter = msg.sender;
 
         //create 100 tokens
-        for (uint i = 0; i < numTokensToMint; i++) {
+        for (uint i = 0; i < NUM_TOKENS_TO_MINT; i++) {
         createShoePair(minter);
         }
     }
@@ -86,19 +86,19 @@ contract CoShoe is ERC721Token {
     * Checks that the value that is attached to the function call equal the price , otherwise it throws an error.
     * Transfers the ownership of a Shoe to the caller of the function by setting owner within the Shoe struct,
       setting name and image to the input variables, and changing sold to true.
-    * @param name address of future owner of the token
-    * @param image address of future owner of the token
+    * @param _name address of future owner of the token
+    * @param _image address of future owner of the token
     */
     function buyShoe(string _name, string _image) public payable{
-        require((numTokensToMint - shoesSold) < 1, 'No pair of shoes left');
+        require((NUM_TOKENS_TO_MINT - shoesSold) < 1, 'No pair of shoes left');
         require(msg.value != price, 'Proposed price does not match price of shoes');
 
-        uint8 shoeIndex = shoesSold - 1;
+        uint shoeIndex = shoesSold - 1;
         uint buyerSendAmount = msg.value; //number of wei sent with the message
         address buyerAddress = msg.sender; //sender of the message (current call)
 
         Shoe memory shoeToBuy = shoes[shoeIndex];
-        address payable previousOwner = shoeToBuy.owner;
+        address previousOwner = shoeToBuy.owner;
         previousOwner.transfer(buyerSendAmount); //transfer money to previous owner
         shoeToBuy.owner = buyerAddress;
         shoeToBuy.name = _name;
@@ -111,18 +111,18 @@ contract CoShoe is ERC721Token {
     * Example: [true, false, false, false, false, true, false, false, …]
     * Function implemented in a gas saving manor
     */
-    function checkPurchases() external view returns(bool[]) {
-        bool[] shoeBoolArray;
+    function checkPurchases() public view returns(bool[]) {
+        uint shoeArrayLength = shoes.length;
+        bool[] memory shoeBoolArray = new bool[](shoeArrayLength);
         bool shoeBoolArrayItem;
-        uint8 shoeArrayLength = shoes.length;
         for (uint i = 0; i < shoeArrayLength; i++) {
-            if (shoes[shoeIndex].owner == msg.sender){
+            if (shoes[i].owner == msg.sender){
                 shoeBoolArrayItem = true;
             }
             else{
                 shoeBoolArrayItem = false;
             }
-            shoeBoolArray.append(shoeBoolArrayItem);
+            shoeBoolArray[i] = shoeBoolArrayItem;
         }
         return shoeBoolArray;
     }
