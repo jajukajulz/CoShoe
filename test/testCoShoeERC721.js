@@ -36,10 +36,10 @@ contract (CoShoe, function (accounts) {
     it('buyShoe correctly transfers ownership, sets the name and the image, sets sold, and updates soldShoes count', async () => {
         let shoeName = 'Airforce1';
         let shoeUrl = 'http://helloworld';
-        let shoePrice = await CoShoeInstance.PRICE;
+        let shoePrice = await CoShoeInstance.getPrice();
 
-        //console.log("half_ether " +half_ether);
-        //console.log("half_ether from solidity " + shoePrice);
+        console.log("half_ether " +half_ether);
+        console.log("half_ether from solidity " + shoePrice);
         await CoShoeInstance.buyShoe(shoeName, shoeUrl, {from: account1, value: half_ether});
 
         // retrieve the details for the pair of shoes
@@ -58,7 +58,7 @@ contract (CoShoe, function (accounts) {
         assert.equal(shoePair['sold'], true, 'sold attribute was not correctly set');
 
         // check that the shoesSold count was correctly updated
-        let shoesSoldCounter = await CoShoeInstance.shoesSold;
+        let shoesSoldCounter = await CoShoeInstance.getNumShoesSold();
         assert.equal(shoesSoldCounter, 1, 'shoesSold was not correctly updated');
     });
 
@@ -71,9 +71,9 @@ contract (CoShoe, function (accounts) {
     });
 
      // d. checkPurchases returns the correct number of true's (we expect 1 true and 99 false)
-    it('checkPurchases returns the correct number of trues', async () => {
-        let shoePurchaseArray = await CoShoeInstance.checkPurchases();
-        let numTrues = shoePurchaseArray.filter(c => c ==="true").length;
+    it('checkPurchases returns the correct number of trues for account1', async () => {
+        let shoePurchaseArray = await CoShoeInstance.checkPurchases({from: account1});
+        let numTrues = shoePurchaseArray.filter(c => c ===true).length;
         assert.equal(numTrues, 1, 'checkPurchases was not correctly updated');
     });
 

@@ -36,8 +36,9 @@ contract CoShoe is ERC721Token {
 
 
     uint8 shoesSold = 0; //number of shoes sold
-    uint64 constant ETHER_WEI_CONST = 1000000000000000000; // 1 ether = 1000000000000000000 wei
-    uint64 constant PRICE = (1 ether / 2) * ETHER_WEI_CONST; //price in wei
+   // uint64  constant ETHER_WEI_CONST = 1000000000000000000; // 1 ether = 1000000000000000000 wei
+    //uint64 constant PRICE = ((1) * ETHER_WEI_CONST)/2; //price in wei - THIS WORKS
+    uint64 constant PRICE = (1 ether)/2; //price in wei for 0.5 ether
 
     /**
     *  @dev Array of shoes. Made public because of length method.
@@ -140,7 +141,21 @@ contract CoShoe is ERC721Token {
     /**
     * @dev A function to get the number of shoes registered / tokens minted i.e. length of shoes array
     */
-    function getNumberOfRegisteredShoes () external view returns(uint) {
+    function getNumberOfRegisteredShoes() external view returns(uint) {
         return shoes.length;
+    }
+
+    /**
+    * @dev A function to return PRICE, used to check in tests that PRICE is 0.5 ether
+    */
+    function getPrice() public pure returns(uint) {
+        return PRICE;
+    }
+
+    /**
+    * @dev A function to return number of shoesSold
+    */
+    function getNumShoesSold() public view returns(uint) {
+        return shoesSold;
     }
 }
