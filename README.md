@@ -1,5 +1,5 @@
 # CoShoe
-CoShoe is an Ethereum smart contract that holds non-fungible tokens (ERC-721) that represent a pair of shoes. Each pair of shoes are unique (personalised - buyer can choose name at the back and image on the side; public key of buyer is engraved into the sole.
+CoShoe is an Ethereum smart contract that holds non-fungible tokens (ERC-721) that represent a pair of shoes. Each pair of shoes are unique (personalised - buyer can choose name at the back and image on the side; public key of buyer is engraved into the sole).
 Every ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces as below.
 ```
 interface ERC721 /* is ERC165 */ {
