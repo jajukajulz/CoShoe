@@ -109,6 +109,7 @@ contract CoShoe is ERC721Token {
         //Shoe memory shoeToBuy = shoes[shoeIndex];
         address previousOwner = shoes[shoeIndex].owner;
         previousOwner.transfer(buyerSendAmount); //transfer money to previous owner
+        //transferFrom(previousOwner, buyerAddress, shoeIndex); //this would otherwise throw since msg.sender account1 in test
         shoes[shoeIndex].owner = buyerAddress;
         shoes[shoeIndex].name = _name;
         shoes[shoeIndex].image = _image;
