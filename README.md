@@ -1,6 +1,28 @@
 # CoShoe
 CoShoe is an Ethereum smart contract that holds non-fungible tokens (ERC-721) that represent a pair of shoes. Each pair of shoes are unique (personalised - buyer can choose name at the back and image on the side; public key of buyer is engraved into the sole.
-
+Every ERC-721 compliant contract must implement the ERC721 and ERC165 interfaces as below.
+```
+interface ERC721 /* is ERC165 */ {
+    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
+    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
+    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
+    function balanceOf(address _owner) external view returns (uint256);
+    function ownerOf(uint256 _tokenId) external view returns (address);
+    function ownerOf(uint256 _tokenId) external view returns (address);
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
+    function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
+    function approve(address _approved, uint256 _tokenId) external payable;
+    function setApprovalForAll(address _operator, bool _approved) external;
+    function getApproved(uint256 _tokenId) external view returns (address);
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+    }
+                                            
+interface ERC165 {
+    function supportsInterface(bytes4 interfaceID) external view returns (bool);
+}
+```
+The interfaces are implemented in the `zeppelin-solidity` package and `CoShoe` inherits from `ERC721Token` i.e. don't re-invent the wheel!
+    
 ## Installation
 1. Install Truffle globally. Truffle is the most popular smart contract development, testing, and deployment framework. 
 ```
